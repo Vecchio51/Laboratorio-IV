@@ -172,3 +172,53 @@ def mostrar_determinante(self):
                 "Error",
                 "Todos los valores de la matriz A deben ser numéricos."
             )
+
+def calcular_determinante_A(self):
+        A, _ = self.extraer_datos()
+        if A is not None:
+            return np.linalg.det(A)
+        return None
+
+    def calcular_sistema(self):
+        """Resuelve el sistema utilizando estrictamente la Regla de Cramer."""
+        dim = self.dim_var.get()
+        A, b = self.extraer_datos()
+        
+        if A is None or b is None:
+            return
+            
+        det_A = np.linalg.det(A)
+        
+        # Mostrar el determinante calculado en el campo correspondiente
+        self.entry_det.config(state="normal")
+        self.entry_det.delete(0, tk.END)
+        self.entry_det.insert(0, f"{det_A:.4f}")
+        self.entry_det.config(state="readonly")
+        
+        # Validación de caso especial: Determinante igual a 0
+        if np.isclose(det_A, 0):
+            messagebox.showwarning("Sistema singular", "El determinante es 0. El sistema no tiene solución única.")
+            return
+            
+        # Limpiar resultados anteriores
+        for i in range(4):
+            self.entries_x[i].config(state="normal")
+            self.entries_x[i].delete(0, tk.END)
+            
+        # Implementación de la Regla de Cramer
+        for i in range(dim):
+            A_modificada = A.copy()
+            A_modificada[:, i] = b # Reemplazar la columna i por el vector b
+            det_A_modificada = np.linalg.det(A_modificada)
+            x_i = det_A_modificada / det_A
+            
+            self.entries_x[i].insert(0, f"{x_i:.4f}")
+            
+        # Volver a solo lectura
+        for i in range(4):
+            self.entries_x[i].config(state="readonly")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = CramerApp(root)
+    root.mainloop()
