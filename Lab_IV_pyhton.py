@@ -112,3 +112,29 @@ def actualizar_dimension(self):
             else:
                 self.entries_x[i].delete(0, tk.END)
                 self.entries_x[i].config(state="disabled")
+
+def borrar_valores(self):
+        # Borrar valores de la matriz A
+        for fila in self.entries_A:
+            for entry in fila:
+                entry.config(state="normal")
+                entry.delete(0, tk.END)
+
+        # Borrar valores del vector b
+        for entry in self.entries_b:
+            entry.config(state="normal")
+            entry.delete(0, tk.END)
+
+        # Borrar resultados del vector x
+        for entry in self.entries_x:
+            entry.config(state="normal")
+            entry.delete(0, tk.END)
+            entry.config(state="readonly")
+
+        # Borrar determinante
+        self.entry_det.config(state="normal")
+        self.entry_det.delete(0, tk.END)
+        self.entry_det.config(state="readonly")
+
+        # Restaurar la dimensión seleccionada
+        self.actualizar_dimension()
