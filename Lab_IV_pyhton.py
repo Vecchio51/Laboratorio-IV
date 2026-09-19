@@ -138,3 +138,37 @@ def borrar_valores(self):
 
         # Restaurar la dimensión seleccionada
         self.actualizar_dimension()
+
+def mostrar_determinante(self):
+        dim = self.dim_var.get()
+
+        try:
+            # Obtener los valores de la matriz A
+            matriz_A = []
+
+            for i in range(dim):
+                fila = []
+
+                for j in range(dim):
+                    valor = float(self.entries_A[i][j].get())
+                    fila.append(valor)
+
+                matriz_A.append(fila)
+
+            # Convertir la matriz a un array de NumPy
+            matriz_A = np.array(matriz_A)
+
+            # Calcular el determinante
+            determinante = np.linalg.det(matriz_A)
+
+            # Mostrar el resultado
+            self.entry_det.config(state="normal")
+            self.entry_det.delete(0, tk.END)
+            self.entry_det.insert(0, f"{determinante:.4f}")
+            self.entry_det.config(state="readonly")
+
+        except ValueError:
+            messagebox.showerror(
+                "Error",
+                "Todos los valores de la matriz A deben ser numéricos."
+            )
