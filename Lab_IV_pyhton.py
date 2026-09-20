@@ -87,7 +87,7 @@ class CramerApp:
         btn_det = tk.Button(self.root, text="Calcular det.", command=self.mostrar_determinante)
         btn_det.place(x=350, y=295)
 
-def actualizar_dimension(self):
+    def actualizar_dimension(self):
         dim = self.dim_var.get()
         
         # Habilitar/Deshabilitar entradas según la dimensión seleccionada
@@ -113,7 +113,7 @@ def actualizar_dimension(self):
                 self.entries_x[i].delete(0, tk.END)
                 self.entries_x[i].config(state="disabled")
 
-def borrar_valores(self):
+    def borrar_valores(self):
         # Borrar valores de la matriz A
         for fila in self.entries_A:
             for entry in fila:
@@ -139,7 +139,56 @@ def borrar_valores(self):
         # Restaurar la dimensión seleccionada
         self.actualizar_dimension()
 
-def mostrar_determinante(self):
+    def extraer_datos(self):
+        """ Extrae los valores ingresados en la matriz A
+        y en el vector b.
+        Devuelve matriz_A de coeficientes y vector_b de terminos independientes.
+        Si hay un error devuelve none"""
+        
+        dim = self.dim_var.get()
+        try:
+            matriz_A = []
+            vector_b = []
+
+            #extraer los valores de la matriz A
+            for i in range(dim):
+                fila = []
+                for j in range(dim):
+                    valor = self.entries_A[i][j].get().strip()
+                    if valor == "":
+                        raise ValueError(
+                            "Todos los campos de la matriz A deben estar completos"
+                        )
+                    fila.append(float(valor))
+                matriz_A.append(fila)
+            # Extraer los valores del vector b
+            for i in range(dim):
+
+                valor = self.entries_b[i].get().strip()
+
+                if valor == "":
+                    raise ValueError(
+                        "Todos los campos del vector b deben estar completos."
+                    )
+
+                vector_b.append(float(valor))
+
+            # Convertir las listas en arreglos de NumPy
+            matriz_A = np.array(matriz_A, dtype=float)
+            vector_b = np.array(vector_b, dtype=float)
+
+            return matriz_A, vector_b
+
+        except ValueError as error:
+
+            messagebox.showerror(
+                "Error en los datos",
+                str(error)
+            )
+
+            return None, None
+
+    def mostrar_determinante(self):
         dim = self.dim_var.get()
 
         try:
@@ -173,7 +222,7 @@ def mostrar_determinante(self):
                 "Todos los valores de la matriz A deben ser numéricos."
             )
 
-def calcular_determinante_A(self):
+    def calcular_determinante_A(self):
         A, _ = self.extraer_datos()
         if A is not None:
             return np.linalg.det(A)
@@ -218,6 +267,7 @@ def calcular_determinante_A(self):
         for i in range(4):
             self.entries_x[i].config(state="readonly")
 
+#Programa principal
 if __name__ == "__main__":
     root = tk.Tk()
     app = CramerApp(root)
